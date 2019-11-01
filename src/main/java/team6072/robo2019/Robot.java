@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team6072.robo2019.commands.ArcadeDriveCmd;
+import team6072.robo2019.pid.MyPIDController;
 import team6072.robo2019.subsystems.DriveSys;
 import team6072.robo2019.subsystems.ElvSys;
 import team6072.robo2019.subsystems.NavXSys;
@@ -63,6 +64,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     mScheduler.disable();
+    MyPIDController.diableAllPIDs();
   }
 
   @Override

@@ -2,8 +2,24 @@ package team6072.robo2019.pid;
 
 import team6072.robo2019.constants.PIDControllerConstants;
 import team6072.robo2019.pid.DataSource;
+import java.util.ArrayList;
 
 public class MyPIDController extends Thread {
+
+    private static ArrayList<MyPIDController> mPIDs;
+    
+    private static void addPID(MyPIDController myPIDController){
+        if(mPIDs == null){
+            mPIDs = new ArrayList<MyPIDController>();
+        }
+        mPIDs.add(myPIDController);
+    }
+
+    public static void diableAllPIDs(){
+        for(MyPIDController myPIDController : mPIDs){
+            myPIDController.end();
+        }
+    }
 
     private final int TIME_INBETWEEN_EXECUTIONS = PIDControllerConstants.TIME_INBETWEEN_EXECUTIONS;
 
@@ -53,13 +69,13 @@ public class MyPIDController extends Thread {
         mMinOutput = minOutput;
         mPriorPosition = dataSource.getData();
         mSetpoint = 0.0;
+        addPID(this);
     }
 
     public void end() {
         mRunnable = false;
         mAccumulatedError = 0;
         mOutput = 0;
-        this.end();
     }
 
     public double getOutput() {

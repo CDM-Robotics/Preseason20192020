@@ -1,9 +1,8 @@
-package team6072.robo2019.pid;
+package team6072.robo2019.datasources;
 
 import team6072.robo2019.subsystems.NavXSys;
 
-
-public class NavXSource extends DataSource {
+public class NavXSource extends DataSourceBase {
 
     private NavXSys mNavxSys;
     private NavXDataTypes mNavXDataTypes;

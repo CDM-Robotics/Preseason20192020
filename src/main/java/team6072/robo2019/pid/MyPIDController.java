@@ -1,7 +1,7 @@
 package team6072.robo2019.pid;
 
 import team6072.robo2019.constants.PIDControllerConstants;
-import team6072.robo2019.pid.DataSource;
+import team6072.robo2019.datasources.DataSourceBase;
 import java.util.ArrayList;
 
 public class MyPIDController extends Thread {
@@ -43,7 +43,7 @@ public class MyPIDController extends Thread {
     private double mAccumulatedError = 0;
     private double mOutput = 0;
 
-    private DataSource mDataSource;
+    private DataSourceBase mDataSource;
 
     /**
      * Remember to use PIDCalc.start() to start the thread and PIDCalc.stop() to
@@ -58,7 +58,7 @@ public class MyPIDController extends Thread {
      * @param maxOutput
      * @param minOutput
      */
-    public MyPIDController(double p, double i, double d, double f, DataSource dataSource, double maxOutput,
+    public MyPIDController(double p, double i, double d, double f, DataSourceBase dataSource, double maxOutput,
             double minOutput) {
         mDataSource = dataSource;
         mP = Math.abs(p);

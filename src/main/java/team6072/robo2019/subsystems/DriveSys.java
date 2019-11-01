@@ -1,14 +1,12 @@
 package team6072.robo2019.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import team6072.robo2019.constants.*;
 import team6072.robo2019.pid.MyPIDController;
-import team6072.robo2019.pid.NavXSource;
-import team6072.robo2019.pid.NavXSource.NavXDataTypes;
-import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import team6072.robo2019.datasources.NavXSource;
+import team6072.robo2019.datasources.NavXSource.NavXDataTypes;
 
 public class DriveSys extends Subsystem {
 

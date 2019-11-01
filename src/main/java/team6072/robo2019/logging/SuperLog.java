@@ -14,6 +14,7 @@ public class SuperLog extends Thread{
         // send data to excel sheet
         
     }
+    
 
     public void end(){
         // ends the thread

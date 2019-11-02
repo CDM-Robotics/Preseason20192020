@@ -8,12 +8,12 @@ public class DriveSysConstants {
     public static final double BASE_PERCENT_OUT = 0.0;
 
     // Motor Numbers //
-    public static final int LEFT_TALON_MASTER = 11;
-    public static final int LEFT_TALON_SLAVE0 = 12;
-    public static final int LEFT_TALON_SLAVE1 = 13;
-    public static final int RIGHT_TALON_MASTER = 14;
-    public static final int RIGHT_TALON_SLAVE0 = 15;
-    public static final int RIGHT_TALON_SLAVE1 = 16;
+    public static final int LEFT_TALON_MASTER = 111;
+    public static final int LEFT_TALON_SLAVE0 = 112;
+    public static final int LEFT_TALON_SLAVE1 = 113;
+    public static final int RIGHT_TALON_MASTER = 121;
+    public static final int RIGHT_TALON_SLAVE0 = 122;
+    public static final int RIGHT_TALON_SLAVE1 = 123;
 
     public static final boolean LEFT_TALON_MASTER_SENSOR_PHASE = true;
     public static final boolean LEFT_TALON_SLAVE0_SENSOR_PHASE = true;

@@ -46,6 +46,7 @@ public class SwerveDriveCmd extends Command {
         }
         mLog.debug("magnitude: " + magnitude + ",  targetAngle: " + targetAngle + ",  y: " + y + ",  x: " + x);
         mLog.reminder("Test the Joystick y output and see if it needs to be inverted");
+        mLog.reminder("Change the Swerve Constants");
 
         /**
          * This all assumes that the joystick's output is how I assume it is. Double check that later

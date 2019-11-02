@@ -34,7 +34,8 @@ public class ArcadeDriveCmd extends Command {
         double mag = mStick.getY();
         double yaw = mStick.getX();
 
-        mLog.reminder("Remember to test the joystick y output and change it here for it to work");
+        mLog.reminder("Test the joystick y output and change it here for it to work");
+        mLog.reminder("Change the motor ids of the robot");
         mag = -mag;// y comes out from stick as negative when going forward, so convert
         yaw = yaw * 0.8; // reduce sensitivity on turn
         

@@ -1,4 +1,4 @@
-package team6072.robo2019.constants;
+package team6072.robo2019.constants.logging;
 
 
 public class SuperLogConstants{

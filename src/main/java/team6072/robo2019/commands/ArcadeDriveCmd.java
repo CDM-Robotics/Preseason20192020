@@ -2,6 +2,9 @@ package team6072.robo2019.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
+import team6072.robo2019.constants.logging.LoggerConstants;
+import team6072.robo2019.logging.LogWrapper;
+import team6072.robo2019.logging.LogWrapper.FileType;
 import team6072.robo2019.subsystems.DriveSys;
 
 /**
@@ -10,7 +13,7 @@ import team6072.robo2019.subsystems.DriveSys;
 public class ArcadeDriveCmd extends Command {
 
     private Joystick mStick;
-
+    private LogWrapper mLog;
     private DriveSys mDriveSys;
 
     /**
@@ -20,6 +23,7 @@ public class ArcadeDriveCmd extends Command {
         requires(DriveSys.getInstance());
         mStick = stick;
         mDriveSys = DriveSys.getInstance();
+        mLog = new LogWrapper(FileType.COMMAND, "ArcadeDriveCmd", LoggerConstants.ARCADE_DRIVE_CMD);
     }
 
     /**
@@ -30,6 +34,7 @@ public class ArcadeDriveCmd extends Command {
         double mag = mStick.getY();
         double yaw = mStick.getX();
 
+        mLog.reminder("Remember to test the joystick y output and change it here for it to work");
         mag = -mag;// y comes out from stick as negative when going forward, so convert
         yaw = yaw * 0.8; // reduce sensitivity on turn
         

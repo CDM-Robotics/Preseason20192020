@@ -1,6 +1,6 @@
 package team6072.robo2019.logging;
 
-import team6072.robo2019.constants.SuperLogConstants;
+import team6072.robo2019.constants.logging.*;
 import team6072.robo2019.datasources.NavXSource;
 import java.util.ArrayList;
 import team6072.robo2019.datasources.NavXSource.NavXDataTypes;

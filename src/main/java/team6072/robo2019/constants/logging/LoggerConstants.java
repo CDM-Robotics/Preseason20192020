@@ -1,4 +1,4 @@
-package team6072.robo2019.constants;
+package team6072.robo2019.constants.logging;
 
 import team6072.robo2019.logging.LogWrapper.Permission;
 
@@ -11,7 +11,9 @@ public class LoggerConstants{
     public static Permission NAVXSYS_PERMISSION = Permission.ALL;
 
 
-    // PID // 
+    // COMMANDS // 
+    public static Permission SWERVE_DRIVE_CMD = Permission.ALL;
+    public static Permission ARCADE_DRIVE_CMD = Permission.ALL;
 
 
 

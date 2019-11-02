@@ -3,6 +3,7 @@ package team6072.robo2019.subsystems;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import team6072.robo2019.constants.*;
 import team6072.robo2019.pid.MyPIDController;
+import team6072.robo2019.constants.subsystems.DriveSysConstants;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import team6072.robo2019.datasources.NavXSource;
@@ -100,14 +101,11 @@ public class DriveSys extends Subsystem {
     private NavXSource mNavXSource;
 
     public void initSwerveDrive() {
-        // set up Navx
-        // set up NavXSource
+        
         mNavXSource = new NavXSource(NavXDataTypes.YAW);
-        // initialize PID with deadband
         mSwervePIDController = new MyPIDController(SWERVE_P, SWERVE_I, SWERVE_D, SWERVE_F, mNavXSource, 1.0, -1.0);
         mSwervePIDController.setDeadband(SWERVE_UPPER_DEADBAND, SWERVE_LOWER_DEADBAND, BASE_PERCENT_OUT);
         mSwervePIDController.start();
-        // set up PID
     }
 
     public void executeSwerveDrive(double targetAngle, double magnitude) {

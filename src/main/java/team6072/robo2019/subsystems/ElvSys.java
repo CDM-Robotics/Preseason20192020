@@ -1,7 +1,7 @@
 package team6072.robo2019.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import team6072.robo2019.constants.ElvSysConstants;
+import team6072.robo2019.constants.subsystems.*;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class ElvSys extends Subsystem {

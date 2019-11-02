@@ -28,8 +28,11 @@ public class LogWrapper {
         }
     }
 
-    public void alarm(String s) {
+    public void reminder(String s) {
         if (mPermission == Permission.ALL) {
+            System.out.print("----------------------------------------------------------------------------\n" + "REMINDER: "
+            + mFileType.toString() + ": " + mName + ": " + s
+            + "\n----------------------------------------------------------------------------");
             System.out.print("**ALARM: " + mFileType.toString() + ": " + mName + ": " + s);
         }
     }

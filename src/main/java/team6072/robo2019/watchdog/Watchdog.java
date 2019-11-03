@@ -1,10 +1,7 @@
 package team6072.robo2019.watchdog;
 
 import java.util.TimerTask;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
+import team6072.robo2019.datasources.DataSourceBase;
 import java.util.Timer;
 
 public class Watchdog {
@@ -12,6 +9,7 @@ public class Watchdog {
     private Timer mWatchDog;
     private TimerTask mWatchDogTask;
     private boolean mMoveable;
+    private DataSourceBase mDataSourceBase;
 
     /**
      * Watchdog sets up the timer and timser task for you - Note that the thing
@@ -23,47 +21,16 @@ public class Watchdog {
      * @param limit The number you want the motor to stop at
      * @param talon The Talon being affected
      */
-    public Watchdog(int limit, TalonSRX talon) {
+    public Watchdog(int limit, DataSourceBase dataSourceBase) {
+        mDataSourceBase = dataSourceBase;
         mMoveable = true;
         mWatchDog = new Timer();
         mWatchDogTask = new TimerTask() {
 
             @Override
             public void run() {
-                int quad = talon.getSensorCollection().getQuadraturePosition();
-                if (quad > limit) {
-                    mMoveable = false;
-                } else {
-                    mMoveable = true;
-                }
-            }
-        };
-        mWatchDog.schedule(mWatchDogTask, 1000, 50);
-
-    }
-
-    /**
-     * Watchdog sets up the timer and timser task for you - Note that the thing
-     * being tracked are the Quadtrature encoder ticks
-     * 
-     * -This function is different in that it re-enables the motor immediately upon
-     * reentering the sensor boundary
-     * 
-     * @param limit         The number you want the motor to stop at
-     * @param defaultOutput The number the motor will become when the limit is
-     *                      reached
-     * @param talon         The Talon being affected
-     */
-    public Watchdog(int limit, int defaultOutput, TalonSRX talon) {
-        mMoveable = true;
-        mWatchDog = new Timer();
-        mWatchDogTask = new TimerTask() {
-
-            @Override
-            public void run() {
-                int quad = talon.getSensorCollection().getQuadraturePosition();
-                if (quad > limit) {
-                    talon.set(ControlMode.PercentOutput, defaultOutput);
+                double currentPosition = mDataSourceBase.getData();
+                if (currentPosition > limit) {
                     mMoveable = false;
                 } else {
                     mMoveable = true;
@@ -87,18 +54,18 @@ public class Watchdog {
      * @param talon         The Talon being affected
      * @param enableLimit   The number that will turn the motor back on
      */
-    public Watchdog(int limit, int defaultOutput, TalonSRX talon, int enableLimit) {
+    public Watchdog(int limit, DataSourceBase dataSourceBase, int enableLimit) {
+        mDataSourceBase = dataSourceBase;
         mMoveable = true;
         mWatchDog = new Timer();
         mWatchDogTask = new TimerTask() {
 
             @Override
             public void run() {
-                int quad = talon.getSensorCollection().getQuadraturePosition();
-                if (quad > limit) {
-                    talon.set(ControlMode.PercentOutput, defaultOutput);
+                double currentPosition = mDataSourceBase.getData();
+                if (currentPosition > limit) {
                     mMoveable = false;
-                } else if (quad < enableLimit) {
+                } else if (currentPosition < enableLimit) {
                     mMoveable = true;
                 }
 
@@ -107,7 +74,7 @@ public class Watchdog {
         mWatchDog.schedule(mWatchDogTask, 1000, 50);
 
     }
-    
+
     /**
      * Returns if the motor is allowed to move or not To use this, you may - 1 set
      * this in front of each move function to properly kill the motor if it goes

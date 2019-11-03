@@ -39,14 +39,17 @@ public class SwerveDriveCmd extends Command {
         }
         if (x < 0) {
             targetAngle = Math.acos(y);
+            targetAngle = targetAngle * 360 / (2 * Math.PI);
             mPreviousTargetAngle = targetAngle;
         } else {
             targetAngle = -Math.acos(y);
+            targetAngle = targetAngle * 360 / (2 * Math.PI);
             mPreviousTargetAngle = targetAngle;
         }
         mLog.debug("magnitude: " + magnitude + ",  targetAngle: " + targetAngle + ",  y: " + y + ",  x: " + x);
         mLog.reminder("Test the Joystick y output and see if it needs to be inverted");
         mLog.reminder("Change the Swerve Constants");
+        mLog.reminder("Double Check that you got your trig math right.  (Math.acos() returns the angle in radians)");
 
         /**
          * This all assumes that the joystick's output is how I assume it is. Double check that later

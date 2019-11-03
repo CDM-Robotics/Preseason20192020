@@ -2,6 +2,8 @@ package team6072.robo2019.logging;
 
 import java.util.ArrayList;
 
+import com.ctre.phoenix.ErrorCode;
+
 public class LogWrapper {
 
     private String mName;
@@ -13,7 +15,7 @@ public class LogWrapper {
     }
 
     public enum Permission {
-        ALL, WARNINGS_AND_ERRORS, ERRORS_ONLY;
+        ALL, REMINDERS_WARNINGS_ERRORS, WARNINGS_AND_ERRORS, ERRORS_ONLY;
     }
 
     public LogWrapper(FileType fileType, String name, Permission permission) {
@@ -29,19 +31,18 @@ public class LogWrapper {
     }
 
     public void reminder(String s) {
-        if (mPermission == Permission.ALL) {
-            System.out.print("----------------------------------------------------------------------------\n" + "REMINDER: "
-            + mFileType.toString() + ": " + mName + ": " + s
-            + "\n----------------------------------------------------------------------------");
-            System.out.print("**ALARM: " + mFileType.toString() + ": " + mName + ": " + s);
+        if (mPermission == Permission.ALL || mPermission == Permission.REMINDERS_WARNINGS_ERRORS) {
+            System.out.print("----------------------------------------------------------------------------\n"
+                    + "REMINDER: " + mFileType.toString() + ": " + mName + ": " + s
+                    + "\n----------------------------------------------------------------------------");
         }
     }
 
     public void warning(String s) {
-        if(mPermission == Permission.ALL || mPermission == Permission.WARNINGS_AND_ERRORS){
-            System.out.print("****************************************************************************\n" + "WARNING: "
-                + mFileType.toString() + ": " + mName + ": " + s
-                + "\n****************************************************************************");
+        if (mPermission != Permission.ERRORS_ONLY) {
+            System.out.print("****************************************************************************\n"
+                    + "WARNING: " + mFileType.toString() + ": " + mName + ": " + s
+                    + "\n****************************************************************************");
 
         }
     }

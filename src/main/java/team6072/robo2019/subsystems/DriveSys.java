@@ -100,7 +100,7 @@ public class DriveSys extends Subsystem {
     private MyPIDController mSwervePIDController;
     private NavXSource mNavXSource;
 
-    public void initSwerveDrive() {
+    public void initRelativeDrive() {
         
         mNavXSource = new NavXSource(NavXDataTypes.YAW);
         mSwervePIDController = new MyPIDController(SWERVE_P, SWERVE_I, SWERVE_D, SWERVE_F, mNavXSource, 1.0, -1.0);
@@ -108,7 +108,7 @@ public class DriveSys extends Subsystem {
         mSwervePIDController.start();
     }
 
-    public void executeSwerveDrive(double targetAngle, double magnitude) {
+    public void executeRelativeDrive(double targetAngle, double magnitude) {
         mSwervePIDController.setSetpoint(targetAngle);
         double yaw = mSwervePIDController.getOutput();
         if(yaw > SWERVE_TURN_TOLERANCE){

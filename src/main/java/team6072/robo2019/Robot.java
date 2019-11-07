@@ -15,9 +15,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team6072.robo2019.commands.ArcadeDriveCmd;
 import team6072.robo2019.logging.SuperLogMaster;
 import team6072.robo2019.pid.MyPIDController;
+import team6072.robo2019.subsystems.ClimberSys;
 import team6072.robo2019.subsystems.DriveSys;
 import team6072.robo2019.subsystems.ElvSys;
+import team6072.robo2019.subsystems.IntakeSys;
 import team6072.robo2019.subsystems.NavXSys;
+import team6072.robo2019.subsystems.PneumaticSys;
+import team6072.robo2019.subsystems.WristSys;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -40,6 +44,10 @@ public class Robot extends TimedRobot {
     DriveSys.getInstance();
     ElvSys.getInstance();
     NavXSys.getInstance();
+    ClimberSys.getInstance();
+    IntakeSys.getInstance();
+    WristSys.getInstance();
+    PneumaticSys.getInstance();
     ControlBoard.getInstance();
     SuperLogMaster.getInstance();
     mScheduler = Scheduler.getInstance();

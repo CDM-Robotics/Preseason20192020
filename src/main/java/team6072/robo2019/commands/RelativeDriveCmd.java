@@ -7,23 +7,23 @@ import team6072.robo2019.constants.logging.LoggerConstants;
 import team6072.robo2019.logging.LogWrapper;
 import team6072.robo2019.logging.LogWrapper.FileType;
 
-public class SwerveDriveCmd extends Command {
+public class RelativeDriveCmd extends Command {
 
     private Joystick mStick;
     private DriveSys mDriveSys;
     private double mPreviousTargetAngle = 0;
     private LogWrapper mLog;
 
-    public SwerveDriveCmd(Joystick stick) {
+    public RelativeDriveCmd(Joystick stick) {
         requires(DriveSys.getInstance());
         mDriveSys = DriveSys.getInstance();
         mStick = stick;
-        mLog = new LogWrapper(FileType.COMMAND, "SwerveDriveCmd", LoggerConstants.SWERVE_DRIVE_CMD);
+        mLog = new LogWrapper(FileType.COMMAND, "RelativeDriveCmd", LoggerConstants.SWERVE_DRIVE_CMD);
     }
 
     public void initialize() {
         mLog.debug("initializing");
-        mDriveSys.initSwerveDrive();
+        mDriveSys.initRelativeDrive();
     }
 
     public void execute() {
@@ -56,7 +56,7 @@ public class SwerveDriveCmd extends Command {
          * may need this line 
          * y = -y
          */
-        mDriveSys.executeSwerveDrive(mPreviousTargetAngle, magnitude);
+        mDriveSys.executeRelativeDrive(mPreviousTargetAngle, magnitude);
     }
 
     public boolean isFinished() {

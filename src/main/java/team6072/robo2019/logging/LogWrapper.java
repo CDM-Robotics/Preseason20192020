@@ -1,9 +1,5 @@
 package team6072.robo2019.logging;
 
-import java.util.ArrayList;
-
-import com.ctre.phoenix.ErrorCode;
-
 public class LogWrapper {
 
     private String mName;
@@ -26,7 +22,7 @@ public class LogWrapper {
 
     public void debug(String s) {
         if (mPermission == Permission.ALL) {
-            System.out.print(mFileType.toString() + ": " + mName + ": " + s);
+            System.out.print(mFileType.toString() + ": " + mName + ": " + s + "\n");
         }
     }
 
@@ -34,7 +30,7 @@ public class LogWrapper {
         if (mPermission == Permission.ALL || mPermission == Permission.REMINDERS_WARNINGS_ERRORS) {
             System.out.print("----------------------------------------------------------------------------\n"
                     + "REMINDER: " + mFileType.toString() + ": " + mName + ": " + s
-                    + "\n----------------------------------------------------------------------------");
+                    + "\n----------------------------------------------------------------------------\n");
         }
     }
 
@@ -42,7 +38,7 @@ public class LogWrapper {
         if (mPermission != Permission.ERRORS_ONLY) {
             System.out.print("****************************************************************************\n"
                     + "WARNING: " + mFileType.toString() + ": " + mName + ": " + s
-                    + "\n****************************************************************************");
+                    + "\n****************************************************************************\n");
 
         }
     }
@@ -50,7 +46,7 @@ public class LogWrapper {
     public void error(String s) {
         System.out.print("****************************************************************************\n" + "ERROR: "
                 + mFileType.toString() + ": " + mName + ": " + s
-                + "\n****************************************************************************");
+                + "\n****************************************************************************\n");
 
     }
 }

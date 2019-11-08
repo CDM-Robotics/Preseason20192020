@@ -20,10 +20,12 @@ public class ArcadeDriveCmd extends Command {
      * Specify the the command requires the DriveSys subsystem
      */
     public ArcadeDriveCmd(Joystick stick) {
+        mLog = new LogWrapper(FileType.COMMAND, "ArcadeDriveCmd", LoggerConstants.ARCADE_DRIVE_CMD);
+        mLog.debug("Arcade Drive Constructor");
+        
         requires(DriveSys.getInstance());
         mStick = stick;
         mDriveSys = DriveSys.getInstance();
-        mLog = new LogWrapper(FileType.COMMAND, "ArcadeDriveCmd", LoggerConstants.ARCADE_DRIVE_CMD);
     }
 
     /**

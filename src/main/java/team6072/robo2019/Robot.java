@@ -42,14 +42,14 @@ public class Robot extends TimedRobot {
   public void robotInit() {
 
     DriveSys.getInstance();
-    ElvSys.getInstance();
-    NavXSys.getInstance();
-    ClimberSys.getInstance();
-    IntakeSys.getInstance();
-    WristSys.getInstance();
-    PneumaticSys.getInstance();
+    // ElvSys.getInstance();
+    // NavXSys.getInstance();
+    // ClimberSys.getInstance();
+    // IntakeSys.getInstance();
+    // WristSys.getInstance();
+    // PneumaticSys.getInstance();
     ControlBoard.getInstance();
-    SuperLogMaster.getInstance();
+    // SuperLogMaster.getInstance();
     mScheduler = Scheduler.getInstance();
   }
 
@@ -74,7 +74,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     mScheduler.disable();
-    SuperLogMaster.getInstance().endAllSuperLoggers();
+    // SuperLogMaster.getInstance().endAllSuperLoggers();
     // MyPIDController.diableAllPIDs();
   }
 
@@ -116,7 +116,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    mScheduler.enable();
+    Scheduler.getInstance().removeAll();
+
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -128,6 +129,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    Scheduler.getInstance().run();
   }
 
   /**

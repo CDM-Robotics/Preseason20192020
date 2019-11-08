@@ -11,10 +11,13 @@ import edu.wpi.first.wpilibj.Joystick;
 import team6072.robo2019.commands.ArcadeDriveCmd;
 import team6072.robo2019.commands.RelativeDriveCmd;
 import team6072.robo2019.constants.ControlBoardConstants;
+import team6072.robo2019.constants.logging.LoggerConstants;
+import team6072.robo2019.logging.LogWrapper;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.POVButton;
+import team6072.robo2019.logging.LogWrapper.FileType;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -23,8 +26,10 @@ import edu.wpi.first.wpilibj.buttons.POVButton;
 public class ControlBoard {
 
     private static ControlBoard mControlBoard;
-    private Joystick mJoystick0;
-    private Joystick mJoystick1;
+    public Joystick mJoystick0;
+    public Joystick mJoystick1;
+
+    private LogWrapper mLog;
 
     public static ControlBoard getInstance() {
         if (mControlBoard == null) {
@@ -34,15 +39,16 @@ public class ControlBoard {
     }
 
     private ControlBoard() {
+        mLog = new LogWrapper(FileType.CONTROLBOARD, "ControlBoard", LoggerConstants.CONTROL_BOARD_PERMISSION);
+
         mJoystick0 = new Joystick(ControlBoardConstants.JOYSTICK0);
         mJoystick1 = new Joystick(ControlBoardConstants.JOYSTICK1);
-        
+
         Scheduler.getInstance().add(new ArcadeDriveCmd(mJoystick0));
         // Scheduler.getInstance().add(new SwerveDriveCommand(mJoystick0));
+
+        mLog.debug("ControlBoard Initialized");
     }
-
-
-
 
     private void MapCmdToBut(Joystick stick, int button, Command pressCmd, Command releaseCmd) {
         JoystickButton but = new JoystickButton(stick, button);

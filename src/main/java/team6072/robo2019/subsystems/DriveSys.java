@@ -1,24 +1,34 @@
 package team6072.robo2019.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import team6072.robo2019.constants.*;
 import team6072.robo2019.pid.MyPIDController;
 import team6072.robo2019.constants.subsystems.DriveSysConstants;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.util.WPILibVersion;
+import team6072.robo2019.logging.LogWrapper;
 import team6072.robo2019.datasources.NavXSource;
+import team6072.robo2019.ControlBoard;
 import team6072.robo2019.datasources.NavXSource.NavXDataTypes;
+import team6072.robo2019.commands.ArcadeDriveCmd;
+import team6072.robo2019.constants.logging.LoggerConstants;
+import team6072.robo2019.logging.LogWrapper.FileType;
 
 public class DriveSys extends Subsystem {
 
     private static DriveSys mDriveSys;
 
-    private TalonSRX mLeft_Master;
-    private TalonSRX mLeft_Slave0;
-    private TalonSRX mLeft_Slave1;
-    private TalonSRX mRight_Master;
-    private TalonSRX mRight_Slave0;
-    private TalonSRX mRight_Slave1;
+    private WPI_TalonSRX mLeft_Master;
+    private WPI_TalonSRX mLeft_Slave0;
+    private WPI_TalonSRX mLeft_Slave1;
+    private WPI_TalonSRX mRight_Master;
+    private WPI_TalonSRX mRight_Slave0;
+    private WPI_TalonSRX mRight_Slave1;
+
+    private LogWrapper mLog;
 
     private DifferentialDrive mRoboDrive;
 
@@ -30,12 +40,14 @@ public class DriveSys extends Subsystem {
     }
 
     private DriveSys() {
-        mLeft_Master = new TalonSRX(DriveSysConstants.LEFT_TALON_MASTER);
-        mLeft_Slave0 = new TalonSRX(DriveSysConstants.LEFT_TALON_SLAVE0);
-        mLeft_Slave1 = new TalonSRX(DriveSysConstants.LEFT_TALON_SLAVE1);
-        mRight_Master = new TalonSRX(DriveSysConstants.RIGHT_TALON_MASTER);
-        mRight_Slave0 = new TalonSRX(DriveSysConstants.RIGHT_TALON_SLAVE0);
-        mRight_Slave1 = new TalonSRX(DriveSysConstants.RIGHT_TALON_SLAVE1);
+        mLog = new LogWrapper(FileType.SUBSYSTEM, "DriveSys", LoggerConstants.DRIVESYS_PERMISSION);
+
+        mLeft_Master = new WPI_TalonSRX(DriveSysConstants.LEFT_TALON_MASTER);
+        mLeft_Slave0 = new WPI_TalonSRX(DriveSysConstants.LEFT_TALON_SLAVE0);
+        mLeft_Slave1 = new WPI_TalonSRX(DriveSysConstants.LEFT_TALON_SLAVE1);
+        mRight_Master = new WPI_TalonSRX(DriveSysConstants.RIGHT_TALON_MASTER);
+        mRight_Slave0 = new WPI_TalonSRX(DriveSysConstants.RIGHT_TALON_SLAVE0);
+        mRight_Slave1 = new WPI_TalonSRX(DriveSysConstants.RIGHT_TALON_SLAVE1);
 
         mLeft_Slave0.follow(mLeft_Master);
         mLeft_Slave1.follow(mLeft_Master);
@@ -64,6 +76,9 @@ public class DriveSys extends Subsystem {
         mLeft_Master.setNeutralMode(DriveSysConstants.DRIVE_NEUTRAL_MODE);
         mRight_Master.setNeutralMode(DriveSysConstants.DRIVE_NEUTRAL_MODE);
 
+        mRoboDrive = new DifferentialDrive(mLeft_Master, mRight_Master);
+
+        mLog.debug("Drivesystem initialize");
     }
 
     /***********************************************************
@@ -101,7 +116,7 @@ public class DriveSys extends Subsystem {
     private NavXSource mNavXSource;
 
     public void initRelativeDrive() {
-        
+
         mNavXSource = new NavXSource(NavXDataTypes.YAW);
         mSwervePIDController = new MyPIDController(SWERVE_P, SWERVE_I, SWERVE_D, SWERVE_F, mNavXSource, 1.0, -1.0);
         mSwervePIDController.setDeadband(SWERVE_UPPER_DEADBAND, SWERVE_LOWER_DEADBAND, BASE_PERCENT_OUT);
@@ -111,9 +126,9 @@ public class DriveSys extends Subsystem {
     public void executeRelativeDrive(double targetAngle, double magnitude) {
         mSwervePIDController.setSetpoint(targetAngle);
         double yaw = mSwervePIDController.getOutput();
-        if(yaw > SWERVE_TURN_TOLERANCE){
+        if (yaw > SWERVE_TURN_TOLERANCE) {
             arcadeDrive(0.0, yaw);
-        }else{
+        } else {
             arcadeDrive(magnitude, yaw);
         }
         // if the angle difference is within a certian tolerance
@@ -123,6 +138,6 @@ public class DriveSys extends Subsystem {
     }
 
     public void initDefaultCommand() {
-
+        setDefaultCommand(new ArcadeDriveCmd(ControlBoard.getInstance().mJoystick0));
     }
 }

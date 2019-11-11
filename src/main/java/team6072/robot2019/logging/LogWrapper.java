@@ -1,5 +1,7 @@
 package team6072.robot2019.logging;
 
+import java.util.ArrayList;
+
 public class LogWrapper {
 
     private String mName;
@@ -11,7 +13,7 @@ public class LogWrapper {
     }
 
     public enum Permission {
-        ALL, REMINDERS_WARNINGS_ERRORS, WARNINGS_AND_ERRORS, ERRORS_ONLY;
+        ALL, WARNINGS_AND_ERRORS, ERRORS_ONLY;
     }
 
     public LogWrapper(FileType fileType, String name, Permission permission) {
@@ -22,23 +24,21 @@ public class LogWrapper {
 
     public void debug(String s) {
         if (mPermission == Permission.ALL) {
-            System.out.print(mFileType.toString() + ": " + mName + ": " + s + "\n");
+            System.out.print(mFileType.toString() + ": " + mName + ": " + s);
         }
     }
 
-    public void reminder(String s) {
-        if (mPermission == Permission.ALL || mPermission == Permission.REMINDERS_WARNINGS_ERRORS) {
-            System.out.print("----------------------------------------------------------------------------\n"
-                    + "REMINDER: " + mFileType.toString() + ": " + mName + ": " + s
-                    + "\n----------------------------------------------------------------------------\n");
+    public void alarm(String s) {
+        if (mPermission == Permission.ALL) {
+            System.out.print("**ALARM: " + mFileType.toString() + ": " + mName + ": " + s);
         }
     }
 
     public void warning(String s) {
-        if (mPermission != Permission.ERRORS_ONLY) {
-            System.out.print("****************************************************************************\n"
-                    + "WARNING: " + mFileType.toString() + ": " + mName + ": " + s
-                    + "\n****************************************************************************\n");
+        if(mPermission == Permission.ALL || mPermission == Permission.WARNINGS_AND_ERRORS){
+            System.out.print("****************************************************************************\n" + "WARNING: "
+                + mFileType.toString() + ": " + mName + ": " + s
+                + "\n****************************************************************************");
 
         }
     }
@@ -46,7 +46,7 @@ public class LogWrapper {
     public void error(String s) {
         System.out.print("****************************************************************************\n" + "ERROR: "
                 + mFileType.toString() + ": " + mName + ": " + s
-                + "\n****************************************************************************\n");
+                + "\n****************************************************************************");
 
     }
 }

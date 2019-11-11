@@ -5,17 +5,11 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import team6072.robot2019.constants.*;
 import team6072.robot2019.pid.MyPIDController;
-import team6072.robot2019.constants.subsystems.DriveSysConstants;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.util.WPILibVersion;
-import team6072.robot2019.logging.LogWrapper;
-import team6072.robot2019.ControlBoard;
 import team6072.robot2019.datasources.NavXSource;
 import team6072.robot2019.datasources.NavXSource.NavXDataTypes;
-import team6072.robot2019.commands.ArcadeDriveCmd;
-import team6072.robot2019.constants.logging.LoggerConstants;
-import team6072.robot2019.logging.LogWrapper.FileType;
+import team6072.robot2019.constants.subsystems.DriveSysConstants;
 
 public class DriveSys extends Subsystem {
 
@@ -28,8 +22,6 @@ public class DriveSys extends Subsystem {
     private WPI_TalonSRX mRight_Slave0;
     private WPI_TalonSRX mRight_Slave1;
 
-    private LogWrapper mLog;
-
     private DifferentialDrive mRoboDrive;
 
     public static DriveSys getInstance() {
@@ -40,8 +32,6 @@ public class DriveSys extends Subsystem {
     }
 
     private DriveSys() {
-        mLog = new LogWrapper(FileType.SUBSYSTEM, "DriveSys", LoggerConstants.DRIVESYS_PERMISSION);
-
         mLeft_Master = new WPI_TalonSRX(DriveSysConstants.LEFT_TALON_MASTER);
         mLeft_Slave0 = new WPI_TalonSRX(DriveSysConstants.LEFT_TALON_SLAVE0);
         mLeft_Slave1 = new WPI_TalonSRX(DriveSysConstants.LEFT_TALON_SLAVE1);
@@ -78,7 +68,6 @@ public class DriveSys extends Subsystem {
 
         mRoboDrive = new DifferentialDrive(mLeft_Master, mRight_Master);
 
-        mLog.debug("Drivesystem initialize");
     }
 
     /***********************************************************
@@ -116,19 +105,22 @@ public class DriveSys extends Subsystem {
     private NavXSource mNavXSource;
 
     public void initRelativeDrive() {
-
+        // set up Navx
+        // set up NavXSource
         mNavXSource = new NavXSource(NavXDataTypes.YAW);
+        // initialize PID with deadband
         mSwervePIDController = new MyPIDController(SWERVE_P, SWERVE_I, SWERVE_D, SWERVE_F, mNavXSource, 1.0, -1.0);
         mSwervePIDController.setDeadband(SWERVE_UPPER_DEADBAND, SWERVE_LOWER_DEADBAND, BASE_PERCENT_OUT);
         mSwervePIDController.start();
+        // set up PID
     }
 
     public void executeRelativeDrive(double targetAngle, double magnitude) {
         mSwervePIDController.setSetpoint(targetAngle);
         double yaw = mSwervePIDController.getOutput();
-        if (yaw > SWERVE_TURN_TOLERANCE) {
+        if(yaw > SWERVE_TURN_TOLERANCE){
             arcadeDrive(0.0, yaw);
-        } else {
+        }else{
             arcadeDrive(magnitude, yaw);
         }
         // if the angle difference is within a certian tolerance
@@ -137,19 +129,7 @@ public class DriveSys extends Subsystem {
         // then it will cut the motor magnitude and only turn
     }
 
-
-    /***********************************************************
-     * 
-     *
-     * Swerve Drive stuff
-     * 
-     * 
-     ***********************************************************/
-
-    public int getCurrentPosition(){
-        return mLeft_Master.getSensorCollection().getQuadraturePosition();
-    }
-
     public void initDefaultCommand() {
+
     }
 }

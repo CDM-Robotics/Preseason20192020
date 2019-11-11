@@ -1,16 +1,30 @@
+/*----------------------------------------------------------------------------*/
+/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
+/* Open Source Software - may be modified and shared by FRC teams. The code   */
+/* must be accompanied by the FIRST BSD license file in the root directory of */
+/* the project.                                                               */
+/*----------------------------------------------------------------------------*/
+
 package team6072.robot2019;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.command.Scheduler;
 import team6072.robot2019.commands.ArcadeDriveCmd;
+import team6072.robot2019.commands.SwerveDriveCmd;
+import team6072.robot2019.constants.ControlBoardConstants;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.POVButton;
-import team6072.robot2019.commands.DriveDistCmd;
 
+/**
+ * This class is the glue that binds the controls on the physical operator
+ * interface to the commands and command groups that allow control of the robot.
+ */
 public class ControlBoard {
 
     private static ControlBoard mControlBoard;
+    private Joystick mJoystick0;
+    private Joystick mJoystick1;
 
     public static ControlBoard getInstance() {
         if (mControlBoard == null) {
@@ -19,20 +33,14 @@ public class ControlBoard {
         return mControlBoard;
     }
 
-    private ControlBoard(){
-        Joystick stick0 = new Joystick(0);
-        Joystick stick1 = new Joystick(1);
-        JoystickButton topLeftButton = new JoystickButton(stick0, 5);
-        Scheduler scheduler = Scheduler.getInstance();
-
-        ArcadeDriveCmd arcadeDriveCmd = new ArcadeDriveCmd(stick0);
-        DriveDistCmd driveDistCmd = new DriveDistCmd(.5, 3);
-
-        scheduler.add(arcadeDriveCmd);
-        topLeftButton.whenPressed(driveDistCmd);
-
+    private ControlBoard() {
+        
+        mJoystick0 = new Joystick(ControlBoardConstants.JOYSTICK0);
+        mJoystick1 = new Joystick(ControlBoardConstants.JOYSTICK1);
+        ArcadeDriveCmd arcadeDriveCmd = new ArcadeDriveCmd(mJoystick0);
+        Scheduler.getInstance().add(arcadeDriveCmd);
+        // Scheduler.getInstance().add(new SwerveDriveCommand(mJoystick0));
     }
-
 
     private void MapCmdToBut(Joystick stick, int button, Command pressCmd, Command releaseCmd) {
         JoystickButton but = new JoystickButton(stick, button);
@@ -73,6 +81,5 @@ public class ControlBoard {
             but.whenReleased(releaseCmd);
         }
     }
-
 
 }

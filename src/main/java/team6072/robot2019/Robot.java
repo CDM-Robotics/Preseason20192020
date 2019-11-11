@@ -8,34 +8,48 @@
 package team6072.robot2019;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import team6072.robot2019.commands.ArcadeDriveCmd;
+import team6072.robot2019.logging.SuperLogMaster;
+import team6072.robot2019.pid.MyPIDController;
 import team6072.robot2019.subsystems.DriveSys;
-
-import team6072.robot2019.logging.LogWrapper.FileType;
-import team6072.robot2019.logging.LogWrapper.Permission;
-import team6072.robot2019.logging.LogWrapper;
-
+import team6072.robot2019.subsystems.ElvSys;
+import team6072.robot2019.subsystems.NavXSys;
 
 /**
- * This is a demo program showing the use of the RobotDrive class, specifically
- * it contains the code necessary to operate a robot with tank drive.
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the TimedRobot
+ * documentation. If you change the name of this class or the package after
+ * creating this project, you must also update the build.gradle file in the
+ * project.
  */
 public class Robot extends TimedRobot {
 
-  private LogWrapper mLog;
+  private Scheduler mScheduler;
 
+  /**
+   * This function is run when the robot is first started up and should be used
+   * for any initialization code.
+   */
   @Override
   public void robotInit() {
-    mLog = new LogWrapper(FileType.ROBOT, "Robot.java", Permission.ALL);
-    Scheduler.getInstance().removeAll();
-    DriveSys.getInstance();
+    mScheduler = Scheduler.getInstance();
+    mScheduler.removeAll();
+
     ControlBoard.getInstance();
+    DriveSys.getInstance();
   }
 
-  public void teleopInit() {
+  public void telopInit(){
+
   }
 
+  @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
   }
+
 }

@@ -7,15 +7,19 @@
 
 package team6072.robot2019;
 
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team6072.robot2019.commands.ArcadeDriveCmd;
+import team6072.robot2019.logging.LogWrapper;
 import team6072.robot2019.logging.SuperLogMaster;
+import team6072.robot2019.logging.LogWrapper.FileType;
 import team6072.robot2019.pid.MyPIDController;
 import team6072.robot2019.subsystems.DriveSys;
+import team6072.robot2019.commands.RelativeDriveCmd;
 import team6072.robot2019.subsystems.ElvSys;
 import team6072.robot2019.subsystems.NavXSys;
 
@@ -29,22 +33,44 @@ import team6072.robot2019.subsystems.NavXSys;
 public class Robot extends TimedRobot {
 
   private Scheduler mScheduler;
-
+  private LogWrapper mLog;
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
    */
   @Override
   public void robotInit() {
+    mLog = new LogWrapper(FileType.ROBOT, "Robot", team6072.robot2019.logging.LogWrapper.Permission.ALL);
     mScheduler = Scheduler.getInstance();
-    mScheduler.removeAll();
 
     ControlBoard.getInstance();
     DriveSys.getInstance();
+    NavXSys.getInstance();
   }
 
-  public void telopInit(){
+  public void disabledInit(){
+    // MyPIDController.disableAllPIDs();
+  }
 
+  public void autonomousInit(){
+    mScheduler.removeAll();
+    RelativeDriveCmd relativeDriveCmd = new RelativeDriveCmd(ControlBoard.getInstance().mJoystick0);
+    Scheduler.getInstance().add(relativeDriveCmd);
+    mLog.alarm("Autonomous");
+    NavXSys.getInstance().zeroYawHeading();
+  }
+
+  @Override
+  public void autonomousPeriodic() {
+    Scheduler.getInstance().run();
+  }
+
+  public void teleopInit(){
+    mScheduler.removeAll();
+    ArcadeDriveCmd arcadeDriveCmd = new ArcadeDriveCmd(ControlBoard.getInstance().mJoystick0);
+    Scheduler.getInstance().add(arcadeDriveCmd);
+    mLog.alarm("TelopInit");
+    NavXSys.getInstance().zeroYawHeading();
   }
 
   @Override

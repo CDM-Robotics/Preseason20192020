@@ -30,12 +30,12 @@ public class DriveSysConstants {
     public static final int DRIVE_TIME_OUT = 10;
 
     // Swerve Drive // still must be set
-    public static final double SWERVE_P = 0.0;
-    public static final double SWERVE_D = 0.0;
-    public static final double SWERVE_I = 0.0;
-    public static final double SWERVE_F = 0.0;
-    public static final double SWERVE_UPPER_DEADBAND = 0.0;
-    public static final double SWERVE_LOWER_DEADBAND = 0.0;
-    public static final double SWERVE_TURN_TOLERANCE = 0.0;
+    public static final double RELATIVE_P = (1.0 / 65.0);
+    public static final double RELATIVE_D = 0.0;
+    public static final double RELATIVE_I = 0.0;
+    public static final double RELATIVE_F = 0.0;
+    public static final double RELATIVE_UPPER_DEADBAND = 0.0;
+    public static final double RELATIVE_LOWER_DEADBAND = 0.0;
+    public static final double RELATIVE_YAW_TOLERANCE = 0.25;
 
 }

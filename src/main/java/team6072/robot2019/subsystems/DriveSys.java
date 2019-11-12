@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import team6072.robot2019.constants.*;
+import team6072.robot2019.constants.logging.LoggerConstants;
 import team6072.robot2019.pid.MyPIDController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -11,9 +12,13 @@ import team6072.robot2019.datasources.NavXSource;
 import team6072.robot2019.datasources.NavXSource.NavXDataTypes;
 import team6072.robot2019.constants.subsystems.DriveSysConstants;
 
+import team6072.robot2019.logging.LogWrapper;
+import team6072.robot2019.logging.LogWrapper.FileType;
+
 public class DriveSys extends Subsystem {
 
     private static DriveSys mDriveSys;
+    private LogWrapper mLog;
 
     private WPI_TalonSRX mLeft_Master;
     private WPI_TalonSRX mLeft_Slave0;
@@ -32,6 +37,7 @@ public class DriveSys extends Subsystem {
     }
 
     private DriveSys() {
+        mLog = new LogWrapper(FileType.SUBSYSTEM, "DriveSystem", LoggerConstants.DRIVESYS_PERMISSION);
         mLeft_Master = new WPI_TalonSRX(DriveSysConstants.LEFT_TALON_MASTER);
         mLeft_Slave0 = new WPI_TalonSRX(DriveSysConstants.LEFT_TALON_SLAVE0);
         mLeft_Slave1 = new WPI_TalonSRX(DriveSysConstants.LEFT_TALON_SLAVE1);
@@ -81,6 +87,7 @@ public class DriveSys extends Subsystem {
     public void arcadeDrive(double mag, double yaw) {
         //yaw is weird
         mRoboDrive.arcadeDrive(mag, -yaw, true);
+        // mLog.periodicDebug("Magnitude: " + mag + " yaw: " + yaw, 20);
     }
 
     /***********************************************************
@@ -91,43 +98,37 @@ public class DriveSys extends Subsystem {
      * 
      ***********************************************************/
 
-    private final double SWERVE_P = DriveSysConstants.SWERVE_P;
-    private final double SWERVE_D = DriveSysConstants.SWERVE_D;
-    private final double SWERVE_I = DriveSysConstants.SWERVE_I;
-    private final double SWERVE_F = DriveSysConstants.SWERVE_F;
+    private double RELATIVE_P = DriveSysConstants.RELATIVE_P;
+    private double RELATIVE_D = DriveSysConstants.RELATIVE_D;
+    private final double RELATIVE_I = DriveSysConstants.RELATIVE_I;
+    private final double RELATIVE_F = DriveSysConstants.RELATIVE_F;
 
-    private final double SWERVE_UPPER_DEADBAND = DriveSysConstants.SWERVE_UPPER_DEADBAND;
-    private final double SWERVE_LOWER_DEADBAND = DriveSysConstants.SWERVE_LOWER_DEADBAND;
+    private final double RELATIVE_UPPER_DEADBAND = DriveSysConstants.RELATIVE_UPPER_DEADBAND;
+    private final double RELATIVE_LOWER_DEADBAND = DriveSysConstants.RELATIVE_LOWER_DEADBAND;
     private final double BASE_PERCENT_OUT = DriveSysConstants.BASE_PERCENT_OUT;
 
-    private final double SWERVE_TURN_TOLERANCE = DriveSysConstants.SWERVE_TURN_TOLERANCE;
+    private final double RELATIVE_YAW_THRESHOLD = DriveSysConstants.RELATIVE_YAW_TOLERANCE;
 
     private MyPIDController mSwervePIDController;
     private NavXSource mNavXSource;
 
     public void initRelativeDrive() {
-        // set up Navx
-        // set up NavXSource
+
         mNavXSource = new NavXSource(NavXDataTypes.YAW);
-        // initialize PID with deadband
-        mSwervePIDController = new MyPIDController(SWERVE_P, SWERVE_I, SWERVE_D, SWERVE_F, mNavXSource, 1.0, -1.0);
-        mSwervePIDController.setDeadband(SWERVE_UPPER_DEADBAND, SWERVE_LOWER_DEADBAND, BASE_PERCENT_OUT);
+        mSwervePIDController = new MyPIDController(RELATIVE_P, RELATIVE_I, RELATIVE_D, RELATIVE_F, mNavXSource, 0.8, -0.8);
+        mLog.warning("REMEMBER TO SET THE DEADBAND ON THE RELATIVE DRIVE SYSTEM!!!!!");
+        // mSwervePIDController.setDeadband(SWERVE_UPPER_DEADBAND, SWERVE_LOWER_DEADBAND, BASE_PERCENT_OUT);
         mSwervePIDController.start();
-        // set up PID
     }
 
     public void executeRelativeDrive(double targetAngle, double magnitude) {
         mSwervePIDController.setSetpoint(targetAngle);
         double yaw = mSwervePIDController.getOutput();
-        if(yaw > SWERVE_TURN_TOLERANCE){
+        if(yaw > RELATIVE_YAW_THRESHOLD){
             arcadeDrive(0.0, yaw);
         }else{
             arcadeDrive(magnitude, yaw);
         }
-        // if the angle difference is within a certian tolerance
-        // then just change the motor difference
-        // if the angle difference is greater than the tolerance
-        // then it will cut the motor magnitude and only turn
     }
 
     public void initDefaultCommand() {

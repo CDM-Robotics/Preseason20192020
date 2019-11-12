@@ -9,7 +9,7 @@ package team6072.robot2019;
 
 import edu.wpi.first.wpilibj.Joystick;
 import team6072.robot2019.commands.ArcadeDriveCmd;
-import team6072.robot2019.commands.SwerveDriveCmd;
+import team6072.robot2019.commands.RelativeDriveCmd;
 import team6072.robot2019.constants.ControlBoardConstants;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -23,8 +23,8 @@ import edu.wpi.first.wpilibj.buttons.POVButton;
 public class ControlBoard {
 
     private static ControlBoard mControlBoard;
-    private Joystick mJoystick0;
-    private Joystick mJoystick1;
+    public Joystick mJoystick0;
+    public Joystick mJoystick1;
 
     public static ControlBoard getInstance() {
         if (mControlBoard == null) {
@@ -37,8 +37,6 @@ public class ControlBoard {
         
         mJoystick0 = new Joystick(ControlBoardConstants.JOYSTICK0);
         mJoystick1 = new Joystick(ControlBoardConstants.JOYSTICK1);
-        ArcadeDriveCmd arcadeDriveCmd = new ArcadeDriveCmd(mJoystick0);
-        Scheduler.getInstance().add(arcadeDriveCmd);
         // Scheduler.getInstance().add(new SwerveDriveCommand(mJoystick0));
     }
 

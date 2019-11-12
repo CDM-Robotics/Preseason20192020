@@ -9,8 +9,11 @@ public class LoggerConstants {
     public static Permission ELVSYS_PERMISSION = Permission.ALL;
     public static Permission NAVXSYS_PERMISSION = Permission.ALL;
 
+    // PID // 
+    public static Permission PID_CONTROLLER_PERMISSION = Permission.ALL;
+
     // Commands //
-    public static Permission SWERVE_DRIVE_CMD = Permission.ALL;
+    public static Permission RELATIVE_DRIVE_CMD = Permission.ERRORS_ONLY;
     public static Permission ARCADE_DRIVE_CMD = Permission.ALL;
 
     // Control Board //

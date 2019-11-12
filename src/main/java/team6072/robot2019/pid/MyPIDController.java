@@ -4,9 +4,14 @@ import team6072.robot2019.constants.pid.PIDControllerConstants;
 import team6072.robot2019.datasources.DataSourceBase;
 import java.util.ArrayList;
 
+import team6072.robot2019.constants.logging.LoggerConstants;
+import team6072.robot2019.logging.LogWrapper;
+import team6072.robot2019.logging.LogWrapper.FileType;
+
 public class MyPIDController extends Thread {
 
     private static ArrayList<MyPIDController> mPIDs;
+    private LogWrapper mLog;
     
     private static void addPID(MyPIDController myPIDController){
         if(mPIDs == null){
@@ -15,9 +20,11 @@ public class MyPIDController extends Thread {
         mPIDs.add(myPIDController);
     }
 
-    public static void diableAllPIDs(){
-        for(MyPIDController myPIDController : mPIDs){
-            myPIDController.end();
+    public static void disableAllPIDs(){
+        if(mPIDs != null){
+            for(MyPIDController myPIDController : mPIDs){
+                myPIDController.end();
+            }
         }
     }
 
@@ -28,10 +35,10 @@ public class MyPIDController extends Thread {
     private boolean hasDeadBand = false;
 
     // constants //
-    private double mP;
-    private double mI;
-    private double mD;
-    private double mF;
+    private double mP = 0.0;
+    private double mI = 0.0;
+    private double mD = 0.0;
+    private double mF = 0.0;
     private double mUpperDeadband;
     private double mLowerDeadband;
     private double mBasePercentOut;
@@ -60,11 +67,13 @@ public class MyPIDController extends Thread {
      */
     public MyPIDController(double p, double i, double d, double f, DataSourceBase dataSource, double maxOutput,
             double minOutput) {
+        mLog = new LogWrapper(FileType.PID, "PID Controller", LoggerConstants.PID_CONTROLLER_PERMISSION);
         mDataSource = dataSource;
-        mP = Math.abs(p);
-        mI = Math.abs(i);
-        mD = Math.abs(d);
-        mF = Math.abs(f);
+        mP = (p);
+        mLog.debug("mP: " + mP);
+        mI = (i);
+        mD = (d);
+        mF = (f);
         mMaxOutput = maxOutput;
         mMinOutput = minOutput;
         mPriorPosition = dataSource.getData();
@@ -99,15 +108,11 @@ public class MyPIDController extends Thread {
         mRunnable = true;
         while (mRunnable) {
             double curnPosition = mDataSource.getData();
-            boolean polarity = polarity(mSetpoint - curnPosition);
-            double err = Math.abs(mSetpoint - curnPosition);
-            double rateOfChange = Math.abs(mPriorPosition - curnPosition) / TIME_INBETWEEN_EXECUTIONS;
+            double err = mSetpoint - curnPosition;
+            double rateOfChange = (mPriorPosition - curnPosition) / TIME_INBETWEEN_EXECUTIONS;
 
             double output = (err * mP) + (mAccumulatedError * mI) + -(rateOfChange * mD) + mF;
 
-            if (!polarity) {
-                output = output * -1;
-            }
             if (output > mMaxOutput) {
                 output = mMaxOutput;
             }
@@ -128,7 +133,7 @@ public class MyPIDController extends Thread {
             mOutput = output;
             mPriorPosition = curnPosition;
             mAccumulatedError = mAccumulatedError + err * TIME_INBETWEEN_EXECUTIONS;
-
+            mLog.periodicDebug("curnPosition: " + curnPosition + ", setPoint: " + mSetpoint + ", Output: " + mOutput, 30);
             try {
                 Thread.sleep(TIME_INBETWEEN_EXECUTIONS);
             } catch (InterruptedException e) {

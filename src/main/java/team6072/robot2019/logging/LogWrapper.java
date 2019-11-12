@@ -22,15 +22,25 @@ public class LogWrapper {
         mPermission = permission;
     }
 
+    private int mIterations;
+    public void periodicDebug(String s, int iterations){
+        if (mPermission == Permission.ALL) {
+            if(mIterations % iterations == 0){
+                System.out.print(mFileType.toString() + ": " + mName + ": " + s + "\n");
+            }
+            mIterations++;
+        }
+    }
+
     public void debug(String s) {
         if (mPermission == Permission.ALL) {
-            System.out.print(mFileType.toString() + ": " + mName + ": " + s);
+            System.out.print(mFileType.toString() + ": " + mName + ": " + s + "\n");
         }
     }
 
     public void alarm(String s) {
         if (mPermission == Permission.ALL) {
-            System.out.print("**ALARM: " + mFileType.toString() + ": " + mName + ": " + s);
+            System.out.print("**ALARM: " + mFileType.toString() + ": " + mName + ": " + s + "\n");
         }
     }
 
@@ -38,7 +48,7 @@ public class LogWrapper {
         if(mPermission == Permission.ALL || mPermission == Permission.WARNINGS_AND_ERRORS){
             System.out.print("****************************************************************************\n" + "WARNING: "
                 + mFileType.toString() + ": " + mName + ": " + s
-                + "\n****************************************************************************");
+                + "\n****************************************************************************" + "\n");
 
         }
     }
@@ -46,7 +56,7 @@ public class LogWrapper {
     public void error(String s) {
         System.out.print("****************************************************************************\n" + "ERROR: "
                 + mFileType.toString() + ": " + mName + ": " + s
-                + "\n****************************************************************************");
+                + "\n****************************************************************************" + "\n");
 
     }
 }

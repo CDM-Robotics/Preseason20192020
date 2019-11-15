@@ -114,7 +114,7 @@ public class DriveSys extends Subsystem {
 
     public void initRelativeDrive() {
 
-        mNavXSource = new NavXSource(NavXDataTypes.YAW);
+        mNavXSource = new NavXSource(NavXDataTypes.TOTAL_YAW);
         mSwervePIDController = new MyPIDController(RELATIVE_P, RELATIVE_I, RELATIVE_D, RELATIVE_F, mNavXSource, 0.8, -0.8);
         mLog.warning("REMEMBER TO SET THE DEADBAND ON THE RELATIVE DRIVE SYSTEM!!!!!");
         // mSwervePIDController.setDeadband(SWERVE_UPPER_DEADBAND, SWERVE_LOWER_DEADBAND, BASE_PERCENT_OUT);

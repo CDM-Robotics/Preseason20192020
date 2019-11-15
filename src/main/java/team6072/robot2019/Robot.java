@@ -57,7 +57,7 @@ public class Robot extends TimedRobot {
     RelativeDriveCmd relativeDriveCmd = new RelativeDriveCmd(ControlBoard.getInstance().mJoystick0);
     Scheduler.getInstance().add(relativeDriveCmd);
     mLog.alarm("Autonomous");
-    NavXSys.getInstance().zeroYawHeading();
+    NavXSys.getInstance().resetAll();
   }
 
   @Override
@@ -70,7 +70,7 @@ public class Robot extends TimedRobot {
     ArcadeDriveCmd arcadeDriveCmd = new ArcadeDriveCmd(ControlBoard.getInstance().mJoystick0);
     Scheduler.getInstance().add(arcadeDriveCmd);
     mLog.alarm("TelopInit");
-    NavXSys.getInstance().zeroYawHeading();
+    NavXSys.getInstance().resetAll();
   }
 
   @Override

@@ -8,13 +8,17 @@ import team6072.robot2019.logging.LogWrapper;
 import team6072.robot2019.logging.LogWrapper.FileType;
 import team6072.robot2019.constants.commands.RelativeDriveCmdConstants;
 import team6072.robot2019.constants.logging.LoggerConstants;
+import team6072.robot2019.datasources.NavXSource;
+import team6072.robot2019.datasources.NavXSource.NavXDataTypes;
 
 public class RelativeDriveCmd extends Command {
 
     private Joystick mStick;
     private DriveSys mDriveSys;
-    private double mPreviousTargetAngle = 0;
+    private double mLastValidJoystickTarget = 0;
     private LogWrapper mLog;
+    private NavXSource mYawSource;
+    private NavXSource mAccumulatedYawSource;
 
     public RelativeDriveCmd(Joystick stick) {
         mLog = new LogWrapper(FileType.COMMAND, "RelativeDriveCmd", LoggerConstants.RELATIVE_DRIVE_CMD);
@@ -25,6 +29,8 @@ public class RelativeDriveCmd extends Command {
 
     public void initialize() {
         mLog.warning("This driving function still has the PAST_ZERO_PROBLEM----Fix before you use this algorithm");
+        mYawSource = new NavXSource(NavXDataTypes.YAW);
+        mYawSource = new NavXSource(NavXDataTypes.TOTAL_YAW);
         mDriveSys.initRelativeDrive();
     }
 
@@ -32,32 +38,36 @@ public class RelativeDriveCmd extends Command {
         // compute angle from joysticks
         double y = mStick.getY();
         double x = mStick.getX();
+        double zeroYawPosition = mAccumulatedYawSource.getData() - mYawSource.getData();
         double magnitude = Math.sqrt((y * y) + (x * x));
-        double targetAngle = 0.0;
+        double joystickTarget = 0.0;
 
         y = -y;
-        try{
+        try {
             y = y / magnitude;
-        }catch (Exception err){
+        } catch (Exception err) {
+
         }
-        if(magnitude > RelativeDriveCmdConstants.SET_ANGLE_THRESHOLD){
+        if (magnitude > RelativeDriveCmdConstants.SET_ANGLE_THRESHOLD) {
             if (x < 0) {
-                targetAngle = -Math.acos(y);
-                targetAngle = ((targetAngle * 360) / (2 * Math.PI));
-                mPreviousTargetAngle = targetAngle;
+                joystickTarget = -Math.acos(y);
+                joystickTarget = ((joystickTarget * 360) / (2 * Math.PI));
+                mLastValidJoystickTarget = joystickTarget;
             } else {
-                targetAngle = Math.acos(y);
-                targetAngle = ((targetAngle * 360) / (2 * Math.PI));
-                mPreviousTargetAngle = targetAngle;
+                joystickTarget = Math.acos(y);
+                joystickTarget = ((joystickTarget * 360) / (2 * Math.PI));
+                mLastValidJoystickTarget = joystickTarget;
             }
         }
-        mLog.periodicDebug("magnitude: " + magnitude + ", targetAngle: " + targetAngle + ", mPerviousAngle: " + mPreviousTargetAngle, 25);
+
+        double targetAngle = mLastValidJoystickTarget + zeroYawPosition;
+
+        mLog.periodicDebug("magnitude: " + magnitude + ", mPerviousAngle: " + mLastValidJoystickTarget, 25);
         /**
-         * This all assumes that the joystick's output is how I assume it is. Double check that later
-         * may need this line 
-         * y = -y
+         * This all assumes that the joystick's output is how I assume it is. Double
+         * check that later may need this line y = -y
          */
-        mDriveSys.executeRelativeDrive(mPreviousTargetAngle, -magnitude);
+        mDriveSys.executeRelativeDrive(targetAngle, -magnitude);
     }
 
     public boolean isFinished() {

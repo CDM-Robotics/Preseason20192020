@@ -8,7 +8,7 @@ public class NavXSource extends DataSourceBase {
     private NavXDataTypes mNavXDataTypes;
 
     public enum NavXDataTypes {
-        YAW, TILT, PITCH;
+        YAW, TILT, PITCH, TOTAL_YAW;
     }
 
     public NavXSource(NavXDataTypes navXDataType) {
@@ -23,7 +23,9 @@ public class NavXSource extends DataSourceBase {
             return mNavxSys.getPitch();
         } else if (mNavXDataTypes == NavXDataTypes.TILT) {
             return mNavxSys.getRoll();
-        } else {
+        } else if (mNavXDataTypes == NavXDataTypes.TOTAL_YAW) {
+            return mNavxSys.getAccumulatedYaw();
+        }else {
             return 0.0;
         }
 

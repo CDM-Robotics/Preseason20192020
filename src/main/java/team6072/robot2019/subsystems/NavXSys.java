@@ -25,7 +25,8 @@ public class NavXSys extends Subsystem {
         mLog = new LogWrapper(FileType.SUBSYSTEM, "NavXSys", LoggerConstants.NAVXSYS_PERMISSION);
         mAHRS = new AHRS(SPI.Port.kMXP, (byte) 100);
         mStartingPosition = mAHRS.getYaw();
-        // mLog.debug("Starting Yaw: " + mAHRS.getYaw() + ", mStartingPosition: " + mStartingPosition); 
+        // mLog.debug("Starting Yaw: " + mAHRS.getYaw() + ", mStartingPosition: " +
+        // mStartingPosition);
     }
 
     public void initDefaultCommand() {
@@ -43,8 +44,13 @@ public class NavXSys extends Subsystem {
         return mAHRS.getPitch();
     }
 
-    public void zeroYawHeading(){
+    public double getAccumulatedYaw() {
+        return mAHRS.getAngle();
+    }
+
+    public void resetAll() {
         mAHRS.zeroYaw();
+        mAHRS.resetDisplacement();
     }
 
 }

@@ -34,8 +34,8 @@ public class DriveSysConstants {
     public static final double RELATIVE_D = 0.0;
     public static final double RELATIVE_I = 0.0;
     public static final double RELATIVE_F = 0.0;
-    public static final double RELATIVE_UPPER_DEADBAND = 0.0;
-    public static final double RELATIVE_LOWER_DEADBAND = 0.0;
-    public static final double RELATIVE_YAW_TOLERANCE = 0.25;
+    public static final double RELATIVE_UPPER_DEADBAND = 0.23;
+    public static final double RELATIVE_LOWER_DEADBAND = -0.23;
+    public static final double RELATIVE_YAW_TOLERANCE = 0.2;
 
 }

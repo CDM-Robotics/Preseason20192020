@@ -30,7 +30,7 @@ public class RelativeDriveCmd extends Command {
     public void initialize() {
         mLog.warning("This driving function still has the PAST_ZERO_PROBLEM----Fix before you use this algorithm");
         mYawSource = new NavXSource(NavXDataTypes.YAW);
-        mYawSource = new NavXSource(NavXDataTypes.TOTAL_YAW);
+        mAccumulatedYawSource = new NavXSource(NavXDataTypes.TOTAL_YAW);
         mDriveSys.initRelativeDrive();
     }
 
@@ -38,20 +38,19 @@ public class RelativeDriveCmd extends Command {
         // compute angle from joysticks
         double y = mStick.getY();
         double x = mStick.getX();
-        double zeroYawPosition = mAccumulatedYawSource.getData() - mYawSource.getData();
+        y = -y;
+
         double magnitude = Math.sqrt((y * y) + (x * x));
         double joystickTarget = 0.0;
 
-        y = -y;
         try {
             y = y / magnitude;
         } catch (Exception err) {
-
         }
         if (magnitude > RelativeDriveCmdConstants.SET_ANGLE_THRESHOLD) {
             if (x < 0) {
                 joystickTarget = -Math.acos(y);
-                joystickTarget = ((joystickTarget * 360) / (2 * Math.PI));
+                joystickTarget = ((joystickTarget * 360) / (2 * Math.PI)) + 360.0;
                 mLastValidJoystickTarget = joystickTarget;
             } else {
                 joystickTarget = Math.acos(y);
@@ -60,14 +59,22 @@ public class RelativeDriveCmd extends Command {
             }
         }
 
-        double targetAngle = mLastValidJoystickTarget + zeroYawPosition;
+        int numOfRobotRevolutions = (int) ((mAccumulatedYawSource.getData() / 360.0));
+        double currentRevPercent = (mAccumulatedYawSource.getData() / 360.0) % 1.0;
+        double currentRevPosition = currentRevPercent * 360.0;
+        double err = Math.abs(mLastValidJoystickTarget - currentRevPosition);
+        if (err > 180.0) {
+            if (Math.abs((mLastValidJoystickTarget + 360) - currentRevPosition) < 180) {
+                mLastValidJoystickTarget = mLastValidJoystickTarget + 360;
+            } else if (Math.abs((mLastValidJoystickTarget - 360) - currentRevPosition) < 180) {
+                mLastValidJoystickTarget = mLastValidJoystickTarget - 360;
+            }
+        }
+        mLastValidJoystickTarget = mLastValidJoystickTarget + numOfRobotRevolutions * 360.0;
+        mLog.periodicDebug("magnitude: " + magnitude + ", mPerviousAngle: " + mLastValidJoystickTarget + ", mYaw: "
+                + mYawSource.getData() + ", mAccumulatedYaw: " + mAccumulatedYawSource.getData(), 25);
 
-        mLog.periodicDebug("magnitude: " + magnitude + ", mPerviousAngle: " + mLastValidJoystickTarget, 25);
-        /**
-         * This all assumes that the joystick's output is how I assume it is. Double
-         * check that later may need this line y = -y
-         */
-        mDriveSys.executeRelativeDrive(targetAngle, -magnitude);
+        mDriveSys.executeRelativeDrive(mLastValidJoystickTarget, -magnitude);
     }
 
     public boolean isFinished() {

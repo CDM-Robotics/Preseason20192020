@@ -10,23 +10,14 @@ import team6072.robot2019.logging.LogWrapper.FileType;
 
 public class MyPIDController {
 
-    private static ArrayList<MyPIDController> mPIDs;
     private LogWrapper mLog;
-    
-    private static void addPID(MyPIDController myPIDController){
-        if(mPIDs == null){
-            mPIDs = new ArrayList<MyPIDController>();
-        }
-        mPIDs.add(myPIDController);
-    }
-
-    private final int TIME_INBETWEEN_EXECUTIONS = PIDControllerConstants.TIME_INBETWEEN_EXECUTIONS;
 
     // Blocker booleans // to prevent things from going too early or too long
-    private boolean mRunnable = false;
     private boolean hasDeadBand = false;
 
     // constants //
+    private final int TIME_INBETWEEN_EXECUTIONS = PIDControllerConstants.TIME_INBETWEEN_EXECUTIONS;
+    
     private double mP = 0.0;
     private double mI = 0.0;
     private double mD = 0.0;
@@ -70,7 +61,6 @@ public class MyPIDController {
         mMinOutput = minOutput;
         mPriorPosition = dataSource.getData();
         mSetpoint = 0.0;
-        addPID(this);
     }
 
     public double getOutput() {

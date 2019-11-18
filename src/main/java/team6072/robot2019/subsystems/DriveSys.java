@@ -1,9 +1,6 @@
 package team6072.robot2019.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
-import team6072.robot2019.constants.*;
 import team6072.robot2019.constants.logging.LoggerConstants;
 import team6072.robot2019.pid.MyPIDController;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -11,7 +8,6 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import team6072.robot2019.datasources.NavXSource;
 import team6072.robot2019.datasources.NavXSource.NavXDataTypes;
 import team6072.robot2019.constants.subsystems.DriveSysConstants;
-
 import team6072.robot2019.logging.LogWrapper;
 import team6072.robot2019.logging.LogWrapper.FileType;
 

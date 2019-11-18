@@ -11,7 +11,6 @@ public class NavXSys extends Subsystem {
 
     private AHRS mAHRS;
     private static NavXSys mNavxSys;
-    private double mStartingPosition;
     private LogWrapper mLog;
 
     public static NavXSys getInstance() {
@@ -24,7 +23,6 @@ public class NavXSys extends Subsystem {
     private NavXSys() {
         mLog = new LogWrapper(FileType.SUBSYSTEM, "NavXSys", LoggerConstants.NAVXSYS_PERMISSION);
         mAHRS = new AHRS(SPI.Port.kMXP, (byte) 100);
-        mStartingPosition = mAHRS.getYaw();
         // mLog.debug("Starting Yaw: " + mAHRS.getYaw() + ", mStartingPosition: " +
         // mStartingPosition);
     }

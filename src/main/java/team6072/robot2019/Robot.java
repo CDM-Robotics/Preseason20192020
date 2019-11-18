@@ -49,7 +49,6 @@ public class Robot extends TimedRobot {
   }
 
   public void disabledInit(){
-    // MyPIDController.disableAllPIDs();
   }
 
   public void autonomousInit(){

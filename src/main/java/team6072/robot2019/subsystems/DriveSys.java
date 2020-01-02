@@ -81,7 +81,7 @@ public class DriveSys extends Subsystem {
      ***********************************************************/
 
     public void arcadeDrive(double mag, double yaw) {
-        //yaw is weird
+        // yaw is weird
         mRoboDrive.arcadeDrive(mag, -yaw, true);
         mLog.periodicDebug("Magnitude: " + mag + " yaw: " + yaw, 20);
     }
@@ -105,24 +105,39 @@ public class DriveSys extends Subsystem {
 
     private final double RELATIVE_YAW_THRESHOLD = DriveSysConstants.RELATIVE_YAW_TOLERANCE;
 
-    private MyPIDController mSwervePIDController;
+    private MyPIDController mRelativePIDController;
     private NavXSource mNavXSource;
 
+    /**
+     * This function sets up the PID constants of the RelativePIDController and the
+     * NavXsource to relay the information to the PID - called in the
+     * RelativeDriveCmd.initialize() function
+     */
     public void initRelativeDrive() {
-
         mNavXSource = new NavXSource(NavXDataTypes.TOTAL_YAW);
-        mSwervePIDController = new MyPIDController(RELATIVE_P, RELATIVE_I, RELATIVE_D, RELATIVE_F, mNavXSource, 1, -1);
+        mRelativePIDController = new MyPIDController(RELATIVE_P, RELATIVE_I, RELATIVE_D, RELATIVE_F, mNavXSource, 1,
+                -1);
         mLog.warning("REMEMBER TO SET THE DEADBAND ON THE RELATIVE DRIVE SYSTEM!!!!!");
-        // mSwervePIDController.setDeadband(RELATIVE_UPPER_DEADBAND, RELATIVE_LOWER_DEADBAND, BASE_PERCENT_OUT);
+        // mRelativePIDController.setDeadband(RELATIVE_UPPER_DEADBAND,
+        // RELATIVE_LOWER_DEADBAND, BASE_PERCENT_OUT);
     }
 
+    /**
+     * This function takes the target angle and sets the PID to that target. It then
+     * uses Robot.arcadeDrive to drive the robot to that yaw position. Then, under a
+     * certian tollerance, when the yaw is close enough to the target yaw angle, the
+     * robot drives forward with the specified magnitude.
+     * 
+     * @param targetAngle
+     * @param magnitude
+     */
     public void executeRelativeDrive(double targetAngle, double magnitude) {
-        mSwervePIDController.setSetpoint(targetAngle);
-        mSwervePIDController.run();
-        double yaw = mSwervePIDController.getOutput();
-        if(yaw > RELATIVE_YAW_THRESHOLD){
+        mRelativePIDController.setSetpoint(targetAngle);
+        mRelativePIDController.run();
+        double yaw = mRelativePIDController.getOutput();
+        if (yaw > RELATIVE_YAW_THRESHOLD) {
             arcadeDrive(0.0, yaw);
-        }else{
+        } else {
             arcadeDrive(magnitude, yaw);
         }
     }

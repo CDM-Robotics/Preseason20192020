@@ -5,7 +5,7 @@ import team6072.robot2019.logging.LogWrapper.Permission;
 public class LoggerConstants {
 
     // Subsystems //
-    public static Permission DRIVESYS_PERMISSION = Permission.PERIODIC_DEBUG_OFF;
+    public static Permission DRIVESYS_PERMISSION = Permission.ERRORS_ONLY;
     public static Permission ELVSYS_PERMISSION = Permission.ALL;
     public static Permission NAVXSYS_PERMISSION = Permission.ALL;
 

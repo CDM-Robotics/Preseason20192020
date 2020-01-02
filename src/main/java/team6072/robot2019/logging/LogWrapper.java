@@ -19,6 +19,7 @@ public class LogWrapper {
     public LogWrapper(FileType fileType, String name, Permission permission) {
         mName = name;
         mFileType = fileType;
+        
         mPermission = permission;
     }
 

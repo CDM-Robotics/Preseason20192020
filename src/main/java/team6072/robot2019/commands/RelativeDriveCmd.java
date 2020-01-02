@@ -11,6 +11,9 @@ import team6072.robot2019.constants.logging.LoggerConstants;
 import team6072.robot2019.datasources.NavXSource;
 import team6072.robot2019.datasources.NavXSource.NavXDataTypes;
 
+/**
+ * Relative drive is a drive mode that changes the role of the driving joystick.  The basic idea is that the driver no longer has to turn manually and only has to indicate 
+ */
 public class RelativeDriveCmd extends Command {
 
     private Joystick mStick;
@@ -20,6 +23,13 @@ public class RelativeDriveCmd extends Command {
     private NavXSource mYawSource;
     private NavXSource mAccumulatedYawSource;
 
+    /**
+     * This is the constructor for Relative drive, takes a josytick as a parameter
+     * to pair it to the driving command
+     * 
+     * @param stick This varaible is the joystick that will be paired to the
+     *              Relative Drive command
+     */
     public RelativeDriveCmd(Joystick stick) {
         mLog = new LogWrapper(FileType.COMMAND, "RelativeDriveCmd", LoggerConstants.RELATIVE_DRIVE_CMD);
         requires(DriveSys.getInstance());
@@ -27,6 +37,9 @@ public class RelativeDriveCmd extends Command {
         mStick = stick;
     }
 
+    /**
+     * This initializes the navX sources so that the data can be collected are relayed to the PID
+     */
     public void initialize() {
         mLog.warning("This driving function still has the PAST_ZERO_PROBLEM----Fix before you use this algorithm");
         mYawSource = new NavXSource(NavXDataTypes.YAW);
@@ -34,6 +47,10 @@ public class RelativeDriveCmd extends Command {
         mDriveSys.initRelativeDrive();
     }
 
+    /**
+     * This is the fun part
+     * 
+     */
     public void execute() {
         // compute angle from joysticks
         double y = mStick.getY();

@@ -121,7 +121,16 @@ public class RelativeDriveCmd extends Command {
         int numOfRobotRevolutions = (int) ((mAccumulatedYawSource.getData() / 360.0)); // First we calculate how many revolutions the robot has already made
         double currentRevPercent = (mAccumulatedYawSource.getData() / 360.0) % 1.0; // from -.9999 to +.99999
         double currentRevPosition = currentRevPercent * 360.0; // Then we calculate where the robot is in its revolution from -359.99 to 359.99
-        double err = Math.abs(mLastValidJoystickTarget - currentRevPosition); 
+        double err = Math.abs(mLastValidJoystickTarget - currentRevPosition); // This calculates the error between the current position and the target. This could be anywhere from > 180 to near 720 degrees
+
+        // In this method I have made the situation down to any one of 2 possible scenarios
+        // number 1 is that the target angle and the current position are very close to each other and dont have to be moved at all
+        //      in this case the if statement below is ignored and it moves on
+        // number 2 is that the target angle and the current position are very far apart,
+        //      this occurs if the target angle and the current position are on different revolutions, such as 270 and 45 
+        //      in this example the fastest route to the target is by traveling 225 degrees which is not efficient 
+        //      Therefore the if statement runs and attempts, through trial and error, to see if that error can be fixed if 
+        //      the target is moved up or down 360 degrees.
         if (err > 180.0) {
             if (Math.abs((mLastValidJoystickTarget + 360) - currentRevPosition) < 180) {
                 mLastValidJoystickTarget = mLastValidJoystickTarget + 360;

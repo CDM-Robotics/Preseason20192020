@@ -53,7 +53,7 @@ public class MyPIDController {
         mLog = new LogWrapper(FileType.PID, "PID Controller", LoggerConstants.PID_CONTROLLER_PERMISSION);
         mDataSource = dataSource;
         mP = (p);
-        mLog.debug("mP: " + mP);
+        mLog.print("mP: " + mP);
         mI = (i);
         mD = (d);
         mF = (f);
@@ -107,7 +107,7 @@ public class MyPIDController {
         mOutput = output;
         mPriorPosition = curnPosition;
         mAccumulatedError = mAccumulatedError + err * TIME_INBETWEEN_EXECUTIONS;
-        mLog.periodicDebug("curnPosition: " + curnPosition + ", setPoint: " + mSetpoint + ", Output: " + mOutput, 30);
+        mLog.periodicPrint("curnPosition: " + curnPosition + ", setPoint: " + mSetpoint + ", Output: " + mOutput, 30);
         try {
             Thread.sleep(TIME_INBETWEEN_EXECUTIONS);
         } catch (InterruptedException e) {

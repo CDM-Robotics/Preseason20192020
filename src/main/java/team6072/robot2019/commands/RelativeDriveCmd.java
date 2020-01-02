@@ -88,7 +88,7 @@ public class RelativeDriveCmd extends Command {
             }
         }
         mLastValidJoystickTarget = mLastValidJoystickTarget + numOfRobotRevolutions * 360.0;
-        mLog.periodicDebug("magnitude: " + magnitude + ", mPerviousAngle: " + mLastValidJoystickTarget + ", mYaw: "
+        mLog.periodicPrint("magnitude: " + magnitude + ", mPerviousAngle: " + mLastValidJoystickTarget + ", mYaw: "
                 + mYawSource.getData() + ", mAccumulatedYaw: " + mAccumulatedYawSource.getData(), 25);
 
         mDriveSys.executeRelativeDrive(mLastValidJoystickTarget, -magnitude);

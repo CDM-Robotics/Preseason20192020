@@ -83,7 +83,7 @@ public class DriveSys extends Subsystem {
     public void arcadeDrive(double mag, double yaw) {
         // yaw is weird
         mRoboDrive.arcadeDrive(mag, -yaw, true);
-        mLog.periodicDebug("Magnitude: " + mag + " yaw: " + yaw, 20);
+        mLog.periodicPrint("Magnitude: " + mag + " yaw: " + yaw, 20);
     }
 
     /***********************************************************

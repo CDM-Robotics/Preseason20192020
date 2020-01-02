@@ -8,6 +8,11 @@ public class LogWrapper {
     private FileType mFileType;
     private Permission mPermission;
 
+    private String mDebugString;
+    private String mAlarmString;
+    private String mWarningString;
+    private String mErrorString;
+
     public enum FileType {
         COMMAND, COMMAND_GROUP, PID, SUBSYSTEM, WATCHDOG, ROBOT, CONTROLBOARD;
     }
@@ -19,15 +24,23 @@ public class LogWrapper {
     public LogWrapper(FileType fileType, String name, Permission permission) {
         mName = name;
         mFileType = fileType;
-        
         mPermission = permission;
+
+        mDebugString = (mFileType.toString() + ": " + mName + ": %s \n");
+        mAlarmString = "**ALARM: " + mDebugString;
+        mWarningString = "****************************************************************************\nWARNING: "
+                + mDebugString + "****************************************************************************\n";
+        mErrorString = "****************************************************************************\nERROR: "
+                + mDebugString + "****************************************************************************\n";
+
     }
 
     private int mIterations;
-    public void periodicDebug(String s, int iterations){
-        if(mPermission == Permission.ALL){
-            if(mIterations % iterations == 0){
-                System.out.print(mFileType.toString() + ": " + mName + ": " + s + "\n");
+
+    public void periodicDebug(String s, int iterations) {
+        if (mPermission == Permission.ALL) {
+            if (mIterations % iterations == 0) {
+                System.out.printf(mDebugString, s);
             }
             mIterations++;
         }
@@ -35,29 +48,25 @@ public class LogWrapper {
 
     public void debug(String s) {
         if (mPermission == Permission.ALL || mPermission == Permission.PERIODIC_DEBUG_OFF) {
-            System.out.print(mFileType.toString() + ": " + mName + ": " + s + "\n");
+            System.out.printf(mDebugString, s);
         }
     }
 
     public void alarm(String s) {
         if (mPermission == Permission.ALL || mPermission == Permission.PERIODIC_DEBUG_OFF) {
-            System.out.print("**ALARM: " + mFileType.toString() + ": " + mName + ": " + s + "\n");
+            System.out.printf(mAlarmString, s);
         }
     }
 
     public void warning(String s) {
-        if(mPermission == Permission.ALL || mPermission == Permission.WARNINGS_AND_ERRORS || mPermission == Permission.PERIODIC_DEBUG_OFF){
-            System.out.print("****************************************************************************\n" + "WARNING: "
-                + mFileType.toString() + ": " + mName + ": " + s
-                + "\n****************************************************************************" + "\n");
-
+        if (mPermission == Permission.ALL || mPermission == Permission.WARNINGS_AND_ERRORS
+                || mPermission == Permission.PERIODIC_DEBUG_OFF) {
+            System.out.printf(mWarningString, s);
         }
     }
 
     public void error(String s) {
-        System.out.print("****************************************************************************\n" + "ERROR: "
-                + mFileType.toString() + ": " + mName + ": " + s
-                + "\n****************************************************************************" + "\n");
+        System.out.printf(mErrorString, s);
 
     }
 }

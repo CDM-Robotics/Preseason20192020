@@ -117,6 +117,7 @@ public class DriveSys extends Subsystem {
         mNavXSource = new NavXSource(NavXDataTypes.TOTAL_YAW);
         mRelativePIDController = new MyPIDController(RELATIVE_P, RELATIVE_I, RELATIVE_D, RELATIVE_F, mNavXSource, 1,
                 -1);
+        mRelativePIDController.start();
         mLog.warning("REMEMBER TO SET THE DEADBAND ON THE RELATIVE DRIVE SYSTEM!!!!!");
         // mRelativePIDController.setDeadband(RELATIVE_UPPER_DEADBAND,
         // RELATIVE_LOWER_DEADBAND, BASE_PERCENT_OUT);
@@ -133,7 +134,6 @@ public class DriveSys extends Subsystem {
      */
     public void executeRelativeDrive(double targetAngle, double magnitude) {
         mRelativePIDController.setSetpoint(targetAngle);
-        mRelativePIDController.run();
         double yaw = mRelativePIDController.getOutput();
         if (yaw > RELATIVE_YAW_THRESHOLD) {
             arcadeDrive(0.0, yaw);

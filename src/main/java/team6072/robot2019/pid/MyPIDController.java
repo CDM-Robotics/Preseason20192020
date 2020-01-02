@@ -8,7 +8,7 @@ import team6072.robot2019.constants.logging.LoggerConstants;
 import team6072.robot2019.logging.LogWrapper;
 import team6072.robot2019.logging.LogWrapper.FileType;
 
-public class MyPIDController {
+public class MyPIDController extends Thread{
 
     private LogWrapper mLog;
 
@@ -35,8 +35,10 @@ public class MyPIDController {
 
     private DataSourceBase mDataSource;
 
+    private boolean mRunnable = true;
+
     /**
-     * Remember to use PIDCalc.start() to start the thread and PIDCalc.stop() to
+     * Remember to use PIDCalc.start() to start the thread and PIDCalc.end() to
      * stop the thread
      * 
      * @param p
@@ -63,6 +65,10 @@ public class MyPIDController {
         mSetpoint = 0.0;
     }
 
+    public void end(){
+        mRunnable = false;
+    }
+
     public double getOutput() {
         return mOutput;
     }
@@ -81,39 +87,41 @@ public class MyPIDController {
     }
 
     public void run() {
-        double curnPosition = mDataSource.getData();
-        double err = mSetpoint - curnPosition;
-        double rateOfChange = (mPriorPosition - curnPosition) / TIME_INBETWEEN_EXECUTIONS;
+        while(mRunnable){
 
-        double output = (err * mP) + (mAccumulatedError * mI) + -(rateOfChange * mD) + mF;
-
-        if (output > mMaxOutput) {
-            output = mMaxOutput;
-        }
-        if (output < mMinOutput) {
-            output = mMinOutput;
-        }
-        if (hasDeadBand) {
-            if (output > mBasePercentOut) {
-                double targetPercentOut = (output - mBasePercentOut) / (mMaxOutput - mBasePercentOut);
-                double scaledOutput = (targetPercentOut * (mMaxOutput - mUpperDeadband)) + mUpperDeadband;
-                output = scaledOutput;
-            } else if (output < mBasePercentOut) {
-                double targetPercentOut = (output - mBasePercentOut) / (mMinOutput - mBasePercentOut);
-                double scaledOutput = (targetPercentOut * (mMinOutput - mLowerDeadband)) - mLowerDeadband;
-                output = scaledOutput;
+            double curnPosition = mDataSource.getData();
+            double err = mSetpoint - curnPosition;
+            double rateOfChange = (mPriorPosition - curnPosition) / TIME_INBETWEEN_EXECUTIONS;
+    
+            double output = (err * mP) + (mAccumulatedError * mI) + -(rateOfChange * mD) + mF;
+    
+            if (output > mMaxOutput) {
+                output = mMaxOutput;
+            }
+            if (output < mMinOutput) {
+                output = mMinOutput;
+            }
+            if (hasDeadBand) {
+                if (output > mBasePercentOut) {
+                    double targetPercentOut = (output - mBasePercentOut) / (mMaxOutput - mBasePercentOut);
+                    double scaledOutput = (targetPercentOut * (mMaxOutput - mUpperDeadband)) + mUpperDeadband;
+                    output = scaledOutput;
+                } else if (output < mBasePercentOut) {
+                    double targetPercentOut = (output - mBasePercentOut) / (mMinOutput - mBasePercentOut);
+                    double scaledOutput = (targetPercentOut * (mMinOutput - mLowerDeadband)) - mLowerDeadband;
+                    output = scaledOutput;
+                }
+            }
+            mOutput = output;
+            mPriorPosition = curnPosition;
+            mAccumulatedError = mAccumulatedError + err * TIME_INBETWEEN_EXECUTIONS;
+            mLog.periodicPrint("curnPosition: " + curnPosition + ", setPoint: " + mSetpoint + ", Output: " + mOutput, 30);
+            try {
+                Thread.sleep(TIME_INBETWEEN_EXECUTIONS);
+            } catch (InterruptedException e) {
+                System.out.println(e);
             }
         }
-        mOutput = output;
-        mPriorPosition = curnPosition;
-        mAccumulatedError = mAccumulatedError + err * TIME_INBETWEEN_EXECUTIONS;
-        mLog.periodicPrint("curnPosition: " + curnPosition + ", setPoint: " + mSetpoint + ", Output: " + mOutput, 30);
-        try {
-            Thread.sleep(TIME_INBETWEEN_EXECUTIONS);
-        } catch (InterruptedException e) {
-            System.out.println(e);
-        }
-
     }
 
     public void setDeadband(double upperDeadband, double lowerDeadband, double basePercentOut) {

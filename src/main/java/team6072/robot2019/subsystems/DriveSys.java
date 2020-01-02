@@ -89,7 +89,7 @@ public class DriveSys extends Subsystem {
     /***********************************************************
      * 
      *
-     * Swerve Drive stuff
+     * Relative Drive stuff
      * 
      * 
      ***********************************************************/

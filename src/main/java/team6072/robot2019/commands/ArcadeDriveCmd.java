@@ -5,7 +5,10 @@ import edu.wpi.first.wpilibj.command.Command;
 import team6072.robot2019.subsystems.DriveSys;
 
 /**
- * Define a command for driving
+ * This is the main driving method used by FRC
+ * it consists of moving and turning relative to the robot at all times
+ * This means pushing right or left on the joystick will result in turning 
+ * right or left respectively while pushing forward will make the robot drive in forward
  */
 public class ArcadeDriveCmd extends Command {
 

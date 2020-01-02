@@ -7,6 +7,9 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import java.util.Timer;
 
+/**
+ * This doesn't work yet either...
+ */
 public class Watchdog {
 
     private Timer mWatchDog;

@@ -33,6 +33,11 @@ public class ControlBoard {
         return mControlBoard;
     }
 
+    /**
+     * Initializes all buttons and joystick controls to standard Commands
+     * Note that this is to initialize commands that are teh same in Autonomous and Teleop
+     * 
+     */
     private ControlBoard() {
         
         mJoystick0 = new Joystick(ControlBoardConstants.JOYSTICK0);

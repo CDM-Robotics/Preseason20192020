@@ -20,7 +20,6 @@ import team6072.robot2019.logging.LogWrapper.FileType;
 import team6072.robot2019.pid.MyPIDController;
 import team6072.robot2019.subsystems.DriveSys;
 import team6072.robot2019.commands.RelativeDriveCmd;
-import team6072.robot2019.subsystems.ElvSys;
 import team6072.robot2019.subsystems.NavXSys;
 
 /**

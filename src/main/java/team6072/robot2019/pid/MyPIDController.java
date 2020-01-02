@@ -40,6 +40,7 @@ public class MyPIDController extends Thread{
     /**
      * Remember to use PIDCalc.start() to start the thread and PIDCalc.end() to
      * stop the thread
+     * Other than that it is a normal PIDcontroller function, with the addition of Deadbanding( which still doesn't work...)
      * 
      * @param p
      * @param i

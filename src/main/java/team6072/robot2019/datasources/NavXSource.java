@@ -2,6 +2,9 @@ package team6072.robot2019.datasources;
 
 import team6072.robot2019.subsystems.NavXSys;
 
+/**
+ * THis is a source for the navx that can be created to look at a specific value from the navx and return data accordingly
+ */
 public class NavXSource extends DataSourceBase {
 
     private NavXSys mNavxSys;

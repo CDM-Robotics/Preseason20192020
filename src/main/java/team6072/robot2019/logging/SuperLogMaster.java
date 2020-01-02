@@ -5,6 +5,9 @@ import team6072.robot2019.datasources.NavXSource;
 import java.util.ArrayList;
 import team6072.robot2019.datasources.NavXSource.NavXDataTypes;
 
+/**
+ * This doesn't work yet...
+ */
 public class SuperLogMaster {
 
     private static SuperLogMaster mSuperLogMaster;
